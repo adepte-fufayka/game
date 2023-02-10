@@ -9,6 +9,11 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class Hero extends Actor {
+    private boolean isJump = false;
+    private final int speed = 70;
+    private final int jumpTime = 150;
+    private int nowJumpTime = 0;
+    private final int yBorder = 0;
     private Texture texture = new Texture("hero.png");
     private Vector2 size = new Vector2(78, 72);
     private Body body;
@@ -22,7 +27,6 @@ public class Hero extends Actor {
     public void act(float delta) {
         Vector2 pos = new Vector2(0, 0);
         super.act(delta);
-        int speed = 40;
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             pos.x += speed;
         }
@@ -30,11 +34,26 @@ public class Hero extends Actor {
             pos.x -= speed;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            pos.y += speed;
+            if (!isJump && nowJumpTime == 0 && body.getPosition().y <= yBorder) {
+                isJump = true;
+                nowJumpTime = jumpTime;
+            }
         }
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            pos.y -= speed;
+            if (isJump) {
+                isJump = false;
+                nowJumpTime = 0;
+            }
         }
+        if (!isJump && body.getPosition().y > yBorder)
+            pos.y -= (speed);
+        if (isJump && nowJumpTime > 0) {
+            pos.y += speed;
+            nowJumpTime -= 1;
+        }
+        if (nowJumpTime == 0)
+            isJump = false;
+        System.out.println(body.getPosition().x + " " + body.getPosition().y + " " + isJump);
         body.setLinearVelocity(pos);
     }
 
