@@ -12,7 +12,7 @@ public class WorldManager {
     private World world;
 
     public WorldManager() {
-        world = new World(new Vector2(0, 0), true);
+        world = new World(new Vector2(0, -100), true);
     }
 
     // density = плотность
@@ -26,6 +26,7 @@ public class WorldManager {
         Body body = world.createBody(bodyDef);
 
         PolygonShape shape = new PolygonShape();
+
         shape.setAsBox(width/2, height/2, new Vector2(width/2, height/2), 45);
 
         FixtureDef fixtureDef = new FixtureDef();

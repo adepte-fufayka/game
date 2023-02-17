@@ -8,7 +8,7 @@ public class Camera {
     private Hero hero;
 
     public Camera(Hero hero) {
-        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        camera = new OrthographicCamera(Gdx.graphics.getWidth()/10, Gdx.graphics.getHeight()/10);
         this.hero = hero;
     }
 

@@ -42,16 +42,16 @@ public class GameScreen implements Screen {
 
         //
 
-        Hero hero = new Hero(new Vector2(200,200), worldManager);
+        Hero hero = new Hero(new Vector2(200/10,200/10), worldManager);
 
         camera = new Camera(hero);
-        FillViewport viewport = new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera.getCamera());
+        FillViewport viewport = new FillViewport(Gdx.graphics.getWidth()/10, Gdx.graphics.getHeight()/10, camera.getCamera());
         stage = new Stage(viewport);
         stage2 = new Stage();
 
         //
 
-        float mapScale = .5f;
+        float mapScale = .05f;
         map = new TmxMapLoader().load("map.tmx");
         tmr = new OrthogonalTiledMapRenderer(map, mapScale, stage.getBatch());
         mapBody = TiledObjectsConverter.importObjects(map, worldManager, mapScale);
