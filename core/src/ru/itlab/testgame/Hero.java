@@ -10,17 +10,14 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class Hero extends Actor {
     private boolean isJump = false;
-    private final int horizontal_speed = 15;
-    private final int vertical_speed = 10;
-    private final int jumpTime = 90;
-    private int nowJumpTime = 0;
-    private final int yBorder = 0;
+    private final int horizontal_speed = 150/Constants.devider;
+    private final int vertical_speed=500000/(Constants.devider*5);
     private Texture texture = new Texture("hero.png");
-    private Vector2 size = new Vector2(7, 7);
+    private Vector2 size = new Vector2(70/Constants.devider, 70/Constants.devider);
     private Body body;
 
     public Hero(Vector2 pos, WorldManager worldManager) {
-        body = worldManager.createDynamicBox(size.x, size.y, 5f, .1f, 0).getBody();
+        body = worldManager.createDynamicBox(size.x, size.y, .5f, .1f, 0).getBody();
         body.setTransform(pos, 0);
     }
 
@@ -35,7 +32,7 @@ public class Hero extends Actor {
             posX -= horizontal_speed;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
-            body.applyForceToCenter(new Vector2(0,-299999),true );
+            body.applyForceToCenter(new Vector2(0,vertical_speed),false );
 //            if (!isJump && nowJumpTime == 0 && body.getPosition().y <= yBorder) {
 //                isJump = true;
 //                nowJumpTime = jumpTime;

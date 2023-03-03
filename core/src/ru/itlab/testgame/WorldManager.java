@@ -27,7 +27,7 @@ public class WorldManager {
 
         PolygonShape shape = new PolygonShape();
 
-        shape.setAsBox(width/2, height/2, new Vector2(width/2, height/2), 45);
+        shape.setAsBox(width/2, height/2, new Vector2(width/2, height/2), 0);
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
