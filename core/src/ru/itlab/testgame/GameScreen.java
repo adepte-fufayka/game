@@ -52,7 +52,7 @@ public class GameScreen implements Screen {
         //
 
         float mapScale = .05f;
-        map = new TmxMapLoader().load("map2.tmx");
+        map = new TmxMapLoader().load("pseudo_main_map.tmx");
         tmr = new OrthogonalTiledMapRenderer(map, mapScale, stage.getBatch());
         mapBody = TiledObjectsConverter.importObjects(map, worldManager, mapScale);
 
