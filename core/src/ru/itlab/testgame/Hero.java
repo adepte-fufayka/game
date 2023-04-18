@@ -9,11 +9,18 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class Hero extends Actor {
-    private boolean isJump = false;
-    private final int horizontal_speed = 150/Constants.devider;
-    private final int vertical_speed=500000/(Constants.devider*5);
+    private final int maxJumps = 1;
+    private int Jumps = maxJumps;
+
+    private boolean isLeft = false;
+    private boolean isDash = false;
+    private final int Final_DashTime = 7;
+    private int dash_time = 0;
+    private int dash_divider = 2;
+    private final int horizontal_speed = 350 / Constants.devider;
+    private final int vertical_speed = 500000 / (Constants.devider * 5);
     private Texture texture = new Texture("hero.png");
-    private Vector2 size = new Vector2(70/Constants.devider, 70/Constants.devider);
+    private Vector2 size = new Vector2(70 / Constants.devider, 70 / Constants.devider);
     private Body body;
 
     public Hero(Vector2 pos, WorldManager worldManager) {
@@ -25,34 +32,36 @@ public class Hero extends Actor {
     public void act(float delta) {
         float posX = 0;
         super.act(delta);
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+        if (!isDash && Gdx.input.isKeyPressed(Input.Keys.D)) {
             posX += horizontal_speed;
+            isLeft = false;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+        if (!isDash && Gdx.input.isKeyPressed(Input.Keys.A)) {
             posX -= horizontal_speed;
+            isLeft = true;
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
-            body.applyForceToCenter(new Vector2(0,vertical_speed),false );
-//            if (!isJump && nowJumpTime == 0 && body.getPosition().y <= yBorder) {
-//                isJump = true;
-//                nowJumpTime = jumpTime;
-//            }
+        if (!isDash && Gdx.input.isKeyJustPressed(Input.Keys.W))
+            if (Jumps > 0) {
+                body.applyForceToCenter(new Vector2(0, vertical_speed), false);
+                Jumps--;
+            }
+        if (!isDash && Gdx.input.isKeyJustPressed(Input.Keys.SHIFT_LEFT))
+            isDash = true;
+        if (isDash) {
+            posX += 78 * (isLeft ? (dash_time % dash_divider == 0 ? -horizontal_speed : 0) : (dash_time % dash_divider == 0 ? horizontal_speed : 0));
+            dash_time += 1;
+            if (dash_time == Final_DashTime) {
+                dash_time = 0;
+                isDash = false;
+            }
         }
+        if (Math.abs(body.getLinearVelocity().y) <= 0.1) Jumps = maxJumps;
+        System.out.println(body.getLinearVelocity().y);
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
 //            if (isJump) {
 //                isJump = false;
-//                nowJumpTime = 0;
-//            }
+//          s      nowJumpTime = 0;
         }
-//        if (!isJump && body.getPosition().y > yBorder)
-//            pos.y -= (vertical_speed);
-//        if (isJump && nowJumpTime > 0) {
-//            pos.y += vertical_speed;
-//            nowJumpTime -= 1;
-//        }
-//        if (nowJumpTime == 0)
-//            isJump = false;
-//        System.out.println(body.getPosition().x + " " + body.getPosition().y + " " + isJump);
         body.setLinearVelocity(posX, body.getLinearVelocity().y);
         System.out.println(body.getLinearVelocity());
     }
@@ -61,7 +70,7 @@ public class Hero extends Actor {
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
 
-        batch.draw(texture, body.getPosition().x, body.getPosition().y, size.x, size.y);
+        batch.draw(texture, isLeft ? size.x + body.getPosition().x : body.getPosition().x, body.getPosition().y, isLeft ? -size.x : size.x, size.y);
     }
 
     public Vector2 getPos() {

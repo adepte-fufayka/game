@@ -19,6 +19,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 
+import java.io.IOException;
+
 public class GameScreen implements Screen {
 
     private Camera camera;
@@ -42,17 +44,24 @@ public class GameScreen implements Screen {
 
         //
 
-        Hero hero = new Hero(new Vector2(200/Constants.devider,500/Constants.devider), worldManager);
+        Hero hero = new Hero(new Vector2(200 / Constants.devider, 500 / Constants.devider), worldManager);
 
         camera = new Camera(hero);
-        FillViewport viewport = new FillViewport(Gdx.graphics.getWidth()/Constants.devider, Gdx.graphics.getHeight()/Constants.devider, camera.getCamera());
+        FillViewport viewport = new FillViewport(Gdx.graphics.getWidth() / Constants.devider, Gdx.graphics.getHeight() / Constants.devider, camera.getCamera());
         stage = new Stage(viewport);
         stage2 = new Stage();
 
         //
 
         float mapScale = .05f;
-        map = new TmxMapLoader().load("pseudo_main_map.tmx");
+        Map_generator map_generator;
+        try {
+            map_generator = new Map_generator();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+//        map = new TmxMapLoader().load("pseudo_main_map.tmx");
+        map=new TmxMapLoader().load("automatic_generated_map.tmx");
         tmr = new OrthogonalTiledMapRenderer(map, mapScale, stage.getBatch());
         mapBody = TiledObjectsConverter.importObjects(map, worldManager, mapScale);
 
@@ -84,7 +93,7 @@ public class GameScreen implements Screen {
         stage2.draw();
 
         doPhysicsStep(delta);
-        //debugRenderer.render(worldManager.getWorld(), camera.getCamera().combined);
+        debugRenderer.render(worldManager.getWorld(), camera.getCamera().combined);
     }
 
     @Override
