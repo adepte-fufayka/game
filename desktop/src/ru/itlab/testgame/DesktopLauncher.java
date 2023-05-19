@@ -8,6 +8,7 @@ import ru.itlab.testgame.MainActivity;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
+		config.setWindowSizeLimits(1440,720,1441,721);
 		config.setForegroundFPS(60);
 		config.setTitle("Corruption");
 		new Lwjgl3Application(new MainActivity(), config);
