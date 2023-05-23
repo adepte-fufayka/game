@@ -1,0 +1,20 @@
+" tilewidth="32" til</data>
+ </layer>
+ <objectgroup id="2" name="Objects">
+  <object id="1" x="18.5" y="433.5">
+   <polyline points="0,0 223,0.5"/>
+  </object>
+  <object id="2" x="275.5" y="433">
+   <polyline points="0,0 228.5,3"/>
+  </object>
+  <object id="3" x="530.5" y="433.5">
+   <polyline points="0,0 226,1.5"/>
+  </object>
+  <object id="4" x="790.5" y="436">
+   <polyline points="0,0 169.5,0 169,-436.5 170.5,203.5 -792,203.5 -790,203.5 -789.5,-436.5 169.5,-435.5"/>
+  </object>
+  <object id="6" x="961.333" y="594">
+   <polyline points="0,0 -959.333,0.666667"/>
+  </object>
+ </objectgroup>
+</map>
