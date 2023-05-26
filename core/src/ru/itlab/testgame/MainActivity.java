@@ -5,7 +5,6 @@ import com.badlogic.gdx.Game;
 import java.io.IOException;
 
 public class MainActivity extends Game {
-
     @Override
     public void create() {
         try {
@@ -13,6 +12,6 @@ public class MainActivity extends Game {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        setScreen(new game_screen(28f / Constants.devider, 400f / Constants.devider));
+        setScreen(new game_screen(28f / Constants.devider, 400f / Constants.devider, this));
     }
 }

@@ -1,5 +1,6 @@
 package ru.itlab.testgame;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -20,13 +21,14 @@ import java.util.ArrayList;
 
 public class game_screen implements Screen {
     SpriteBatch background;
+    private Game main_activity;
     private Camera camera;
     private Hero hero;
     private Stage stage;
     Vector2 pos;
     float speed = 2.5F;
     private WorldManager worldManager;
-//    private WorldManager worldManager1;
+    //    private WorldManager worldManager1;
     private float accumulator = 0;
     private Box2DDebugRenderer debugRenderer;
     private int width = Gdx.graphics.getWidth();
@@ -41,7 +43,6 @@ public class game_screen implements Screen {
     private ArrayList<Integer[]> the_stars = new ArrayList<Integer[]>();
 
     public void stars_generation() {
-
         for (int i = 0; i < width; i += 4) {
             for (int j = 0; j < height; j += 4) {
                 int chance = (int) (Math.random() * 100001f);
@@ -55,8 +56,10 @@ public class game_screen implements Screen {
             }
         }
     }
-    public game_screen(float x, float y) {
+
+    public game_screen(float x, float y, Game game) {
         pos = new Vector2(x, y);
+        main_activity = game;
     }
 
 
@@ -113,18 +116,19 @@ public class game_screen implements Screen {
     @Override
     public void render(float delta) {
         if (hero.isDoorEnter()) {
-        }else{
-
-        Gdx.input.setInputProcessor(stage);
-        ScreenUtils.clear(15 / 255f, 9 / 255f, 43 / 255f, 0);
-        doPhysicsStep(delta, worldManager);
-        stage.act();
-        tmr.setView(camera.getCamera());
-        tmr.render();
-        stage.draw();
-        debugRenderer.render(worldManager.getWorld(), camera.getCamera().combined);
-        camera.update();
-    }}
+            main_activity.setScreen(new bg_game_screen(hero.getPos().x, hero.getPos().y, main_activity));
+        } else {
+            Gdx.input.setInputProcessor(stage);
+            ScreenUtils.clear(15 / 255f, 9 / 255f, 43 / 255f, 0);
+            doPhysicsStep(delta, worldManager);
+            stage.act();
+            tmr.setView(camera.getCamera());
+            tmr.render();
+            stage.draw();
+            debugRenderer.render(worldManager.getWorld(), camera.getCamera().combined);
+            camera.update();
+        }
+    }
 
     @Override
     public void dispose() {

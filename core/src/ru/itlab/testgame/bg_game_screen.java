@@ -1,5 +1,6 @@
 package ru.itlab.testgame;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -15,6 +16,7 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 
 public class bg_game_screen implements Screen {
     private Camera camera;
+    private Game main_activity;
     private float accumulator = 0;
     private Hero hero;
     Vector2 pos;
@@ -27,8 +29,9 @@ public class bg_game_screen implements Screen {
     private TiledMap map;
     private Array<Fixture> mapBody = new Array<>();
 
-    public bg_game_screen(float x, float y) {
+    public bg_game_screen(float x, float y, Game game) {
         pos = new Vector2(x, y);
+        main_activity = game;
     }
 
     public void show() {
@@ -48,15 +51,19 @@ public class bg_game_screen implements Screen {
     }
 
     public void render(float delta) {
-        Gdx.input.setInputProcessor(stage);
-        ScreenUtils.clear(15 / 255f, 9 / 255f, 43 / 255f, 0);
-        doPhysicsStep(delta, worldManager);
-        stage.act();
-        tmr.setView(camera.getCamera());
-        tmr.render();
-        stage.draw();
-        debugRenderer.render(worldManager.getWorld(), camera.getCamera().combined);
-        camera.update();
+        if (hero.isDoorEnter()) {
+            main_activity.setScreen(new game_screen(hero.getPos().x, hero.getPos().y, main_activity));
+        } else {
+            Gdx.input.setInputProcessor(stage);
+            ScreenUtils.clear(15 / 255f, 9 / 255f, 43 / 255f, 0);
+            doPhysicsStep(delta, worldManager);
+            stage.act();
+            tmr.setView(camera.getCamera());
+            tmr.render();
+            stage.draw();
+            debugRenderer.render(worldManager.getWorld(), camera.getCamera().combined);
+            camera.update();
+        }
     }
 
     private void doPhysicsStep(float deltaTime, WorldManager world) {
