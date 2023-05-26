@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 public class Hero extends Actor {
     private final int maxJumps = 1;
     private int Jumps = maxJumps;
-
+    private boolean enters = false;
     private boolean isEnter = false;
     private boolean isLeft = false;
     private boolean isDash = false;
@@ -44,8 +44,12 @@ public class Hero extends Actor {
             posX -= horizontal_speed;
             isLeft = true;
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER))
+        enters = false;
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             isEnter = !isEnter;
+            enters = true;
+        }
+        System.out.println(isEnter);
         if (!isDash && Gdx.input.isKeyJustPressed(Input.Keys.W))
             if (Jumps > 0) {
                 body.applyForceToCenter(new Vector2(0, vertical_speed), false);
@@ -79,11 +83,15 @@ public class Hero extends Actor {
 //          s      nowJumpTime = 0;
         }
         body.setLinearVelocity(posX, body.getLinearVelocity().y);
-        System.out.println(body.getLinearVelocity());
+//        System.out.println(body.getLinearVelocity());
     }
 
     public boolean isEnter() {
         return isEnter;
+    }
+
+    public boolean entres() {
+        return enters;
     }
 
     @Override
