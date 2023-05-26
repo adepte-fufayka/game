@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 
 public class bg_game_screen implements Screen {
+    private front_map_generator map_generator;
     private Camera camera;
     private Game main_activity;
     private float accumulator = 0;
@@ -29,7 +30,8 @@ public class bg_game_screen implements Screen {
     private TiledMap map;
     private Array<Fixture> mapBody = new Array<>();
 
-    public bg_game_screen(float x, float y, Game game) {
+    public bg_game_screen(float x, float y, Game game, front_map_generator map_generator) {
+        this.map_generator = map_generator;
         pos = new Vector2(x, y);
         main_activity = game;
     }
@@ -37,7 +39,7 @@ public class bg_game_screen implements Screen {
     public void show() {
         worldManager = new WorldManager();
         debugRenderer = new Box2DDebugRenderer();
-        hero = new Hero(pos, worldManager);
+        hero = new Hero(pos, worldManager,map_generator);
         camera = new Camera(hero);
         FillViewport viewport = new FillViewport(Gdx.graphics.getWidth() / Constants.devider, Gdx.graphics.getHeight() / Constants.devider, camera.getCamera());
         stage = new Stage(viewport);
@@ -52,10 +54,12 @@ public class bg_game_screen implements Screen {
 
     public void render(float delta) {
         if (hero.isDoorEnter()) {
-            main_activity.setScreen(new game_screen(hero.getPos().x, hero.getPos().y, main_activity));
+            main_activity.setScreen(new game_screen(hero.getPos().x, hero.getPos().y, main_activity, map_generator));
+            dispose();
+            worldManager.dispose();
         } else {
             Gdx.input.setInputProcessor(stage);
-            ScreenUtils.clear(15 / 255f, 9 / 255f, 43 / 255f, 0);
+            ScreenUtils.clear(0 / 255f, 0 / 255f, 0 / 255f, 0);
             doPhysicsStep(delta, worldManager);
             stage.act();
             tmr.setView(camera.getCamera());

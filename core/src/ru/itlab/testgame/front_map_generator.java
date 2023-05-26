@@ -234,13 +234,13 @@ public class front_map_generator {
         for (int i = 0; i < tile_map_indexes.length; i++) {
             int n = mapsSubClass.getDoor_positions(bg_tile_map_indexes[i]).length;
             for (int j = 0; j < n; j++) {
-                positions.add(new Vector2(mapsSubClass.getDoor_positions(bg_tile_map_indexes[i])[j].x + map_pos[i], mapsSubClass.getDoor_positions(bg_tile_map_indexes[i])[j].y));
+                positions.add(new Vector2(mapsSubClass.getDoor_positions(bg_tile_map_indexes[i])[j].x / Constants.devider + map_pos[i] / Constants.devider, mapsSubClass.getDoor_positions(bg_tile_map_indexes[i])[j].y / Constants.devider));
             }
         }
         door_pos = new Vector2[positions.size()];
         for (int i = 0; i < door_pos.length; i++) {
             door_pos[i] = new Vector2(positions.get(i));
-            System.out.println(positions.get(i).x+" "+positions.get(i).y);
+            System.out.println(positions.get(i).x + " " + positions.get(i).y);
         }
     }
 

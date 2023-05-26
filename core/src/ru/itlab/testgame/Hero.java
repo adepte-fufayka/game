@@ -7,6 +7,9 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.utils.Array;
+
+import java.util.Arrays;
 
 public class Hero extends Actor {
     private final int maxJumps = 1;
@@ -25,11 +28,15 @@ public class Hero extends Actor {
     private Body body;
     private Vector2 size = new Vector2(const_size.x, const_size.y);
     WorldManager worldManager;
+    private front_map_generator map_generator;
+    private Vector2[] doors_pos;
 
-    public Hero(Vector2 pos, WorldManager worldManager) {
+    public Hero(Vector2 pos, WorldManager worldManager, front_map_generator map_generator) {
         body = worldManager.createDynamicBox(size.x, size.y, .0005f, 0f, 0).getBody();
         body.setTransform(pos, 0);
         this.worldManager = worldManager;
+        this.map_generator = map_generator;
+        doors_pos = Arrays.copyOf(map_generator.getDoor_pos(), map_generator.getDoor_pos().length);
     }
 
     public Body getBody() {
@@ -50,10 +57,20 @@ public class Hero extends Actor {
         }
         enters = false;
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            isEnter = !isEnter;
-            enters = true;
+            boolean flag = false;
+            for (int i = 0; i < doors_pos.length; i++) {
+                if (body.getPosition().x > doors_pos[i].x - 32 && body.getPosition().x < doors_pos[i].x + 32 && body.getPosition().y < doors_pos[i].y + 32) {
+                    flag = true;
+                    break;
+                }
+            }
+            if (flag) {
+                isEnter = !isEnter;
+                enters = true;
+            }
         }
-        System.out.println(isEnter+ " "+ enters);
+        System.out.println(isEnter + " " + enters);
+        System.out.println(body.getPosition());
         if (!isDash && Gdx.input.isKeyJustPressed(Input.Keys.W))
             if (Jumps > 0) {
                 body.applyForceToCenter(new Vector2(0, vertical_speed), false);

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 public class game_screen implements Screen {
     SpriteBatch background;
     private Game main_activity;
+    private front_map_generator map_generator;
     private Camera camera;
     private Hero hero;
     private Stage stage;
@@ -57,7 +58,8 @@ public class game_screen implements Screen {
         }
     }
 
-    public game_screen(float x, float y, Game game) {
+    public game_screen(float x, float y, Game game, front_map_generator map_generator) {
+        this.map_generator = map_generator;
         pos = new Vector2(x, y);
         main_activity = game;
     }
@@ -71,7 +73,7 @@ public class game_screen implements Screen {
 
         //
 
-        hero = new Hero(pos, worldManager);
+        hero = new Hero(pos, worldManager,map_generator);
 
         camera = new Camera(hero);
         FillViewport viewport = new FillViewport(Gdx.graphics.getWidth() / 28f, Gdx.graphics.getHeight() / 28f, camera.getCamera());
@@ -116,7 +118,9 @@ public class game_screen implements Screen {
     @Override
     public void render(float delta) {
         if (hero.isDoorEnter()) {
-            main_activity.setScreen(new bg_game_screen(hero.getPos().x, hero.getPos().y, main_activity));
+            main_activity.setScreen(new bg_game_screen(hero.getPos().x, hero.getPos().y, main_activity, map_generator));
+            dispose();
+            worldManager.dispose();
         } else {
             Gdx.input.setInputProcessor(stage);
             ScreenUtils.clear(15 / 255f, 9 / 255f, 43 / 255f, 0);
