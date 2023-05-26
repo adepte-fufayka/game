@@ -2,6 +2,7 @@ package ru.itlab.testgame;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.physics.box2d.Fixture;
 
 import java.io.File;
 import java.io.FileReader;
@@ -15,7 +16,7 @@ public class front_map_generator {
     private TiledMap[] map;
     private int start_index_map_data = 5;
     private int end_index_map_data;
-    private int bg_start_index_map_data =6 ;
+    private int bg_start_index_map_data = 6;
     private int bg_end_index_map_data;
     private TiledMap big_map;
     private int[] tile_map_indexes = new int[0];

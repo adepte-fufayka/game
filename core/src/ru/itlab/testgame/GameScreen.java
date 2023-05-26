@@ -31,6 +31,7 @@ public class GameScreen implements Screen {
     Vector2 pos;
     float speed = 2.5F;
     private WorldManager worldManager;
+    private WorldManager worldManager1;
     private float accumulator = 0;
     private Box2DDebugRenderer debugRenderer;
     private int width = Gdx.graphics.getWidth();
@@ -40,8 +41,8 @@ public class GameScreen implements Screen {
     private OrthogonalTiledMapRenderer tmr1;
     private OrthogonalTiledMapRenderer bg_tmr1;
 
-//    private Array<Fixture> mapBody1 = new Array<>();
-//    private Array<Fixture> bg_mapBody1 = new Array<>();
+    private Array<Fixture> mapBody1 = new Array<>();
+    private Array<Fixture> bg_mapBody1 = new Array<>();
     private ArrayList<Integer[]> the_stars = new ArrayList<Integer[]>();
 
     public void stars_generation() {
@@ -63,6 +64,7 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         worldManager = new WorldManager();
+        worldManager1 = new WorldManager();
         debugRenderer = new Box2DDebugRenderer();
 
         //
@@ -93,8 +95,8 @@ public class GameScreen implements Screen {
 //        map1=new TmxMapLoader().load("assets/tiled_map_assets/tiled_map_1.tmx");
         tmr1 = new OrthogonalTiledMapRenderer(map1, mapScale, stage.getBatch());
         bg_tmr1 = new OrthogonalTiledMapRenderer(bg_map1, mapScale, stage2.getBatch());
-//        mapBody1 = TiledObjectsConverter.importObjects(map1, worldManager, mapScale);
-//        bg_mapBody1 = TiledObjectsConverter.importObjects(bg_map1, worldManager, mapScale);
+        mapBody1 = TiledObjectsConverter.importObjects(map1, worldManager, mapScale);
+        bg_mapBody1 = TiledObjectsConverter.importObjects(bg_map1, worldManager1, mapScale);
 
 
 //        map = map_generator.getMap();
@@ -156,11 +158,20 @@ public class GameScreen implements Screen {
 
         if (!hero.isEnter()) {
             ScreenUtils.clear(15 / 255f, 9 / 255f, 43 / 255f, 0);
+//            float x = hero.getX(), y = hero.getY();
+//            hero.remove();
+//            hero = null;
+//            hero = new Hero(new Vector2(x, y), worldManager);
             stage.act();
             tmr1.setView(camera.getCamera());
             tmr1.render();
             stage.draw();
         } else {
+//            float x = hero.getX(), y = hero.getY();
+//            hero.remove();
+//            hero = null;
+//            hero = new Hero(new Vector2(x, y), worldManager1);
+            ScreenUtils.clear(0 / 255f, 0 / 255f, 0 / 255f, 0);
             stage2.act();
             bg_tmr1.setView(camera.getCamera());
             bg_tmr1.render();
