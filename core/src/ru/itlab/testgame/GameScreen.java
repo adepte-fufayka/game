@@ -120,15 +120,18 @@ public class GameScreen implements Screen {
 //        stage.getBatch().end();
     @Override
     public void render(float delta) {
-        if (!hero.isEnter()) {
+        if (!hero.isDoorEnter()) {
+            Gdx.input.setInputProcessor(stage);
             if (hero.entres()) {
+//                Gdx.input.setInputProcessor(stage2);
                 float x = hero.getX(), y = hero.getY();
 //                hero.remove();
 //                hero = null;
+                worldManager1.getWorld().destroyBody(hero.getBody());
                 hero = new Hero(new Vector2(x, y), worldManager);
             }
             ScreenUtils.clear(15 / 255f, 9 / 255f, 43 / 255f, 0);
-            doPhysicsStep(delta,worldManager);
+            doPhysicsStep(delta, worldManager);
             stage.act();
             tmr1.setView(camera.getCamera());
             tmr1.render();
@@ -136,19 +139,22 @@ public class GameScreen implements Screen {
 
             debugRenderer.render(worldManager.getWorld(), camera.getCamera().combined);
         } else {
+            Gdx.input.setInputProcessor(stage2);
             if (hero.entres()) {
+//                Gdx.input.setInputProcessor(stage);
                 float x = hero.getX(), y = hero.getY();
 //                hero.remove();
 //                hero = null;
+                worldManager.getWorld().destroyBody(hero.getBody());
                 hero = new Hero(new Vector2(x, y), worldManager1);
+
             }
             ScreenUtils.clear(0 / 255f, 0 / 255f, 0 / 255f, 0);
-            doPhysicsStep(delta,worldManager1);
+            doPhysicsStep(delta, worldManager1);
             stage2.act();
             bg_tmr1.setView(camera.getCamera());
             bg_tmr1.render();
             stage2.draw();
-
             debugRenderer.render(worldManager1.getWorld(), camera.getCamera().combined);
         }
         camera.update();

@@ -2,6 +2,7 @@ package ru.itlab.testgame;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
 
 import java.io.File;
@@ -22,6 +23,7 @@ public class front_map_generator {
     private int[] tile_map_indexes = new int[0];
     private int[] bg_tile_map_indexes = new int[0];
     private File[] list_of_maps;
+    private ArrayList<Vector2[]> door_pos;
     private float[] map_pos = new float[0];
 
     public TiledMap getMap() {
@@ -223,5 +225,20 @@ public class front_map_generator {
         System.out.println("bbb");
         big_map = new TmxMapLoader().load("assets/bg_automatic_generated_map.tmx");
         System.out.println("background map has been generated sucessfully");
+        doors_position_setter();
     }
+
+    private void doors_position_setter() {
+        ArrayList<Vector2> positions = new ArrayList<>();
+        maps_sub_class mapsSubClass = new maps_sub_class();
+        for (int i = 0; i < tile_map_indexes.length; i++) {
+            int n = mapsSubClass.getDoor_positions(bg_tile_map_indexes[i]).length;
+            for (int j = 0; j < n; j++) {
+                positions.add(mapsSubClass.getDoor_positions(bg_tile_map_indexes[i])[j]);
+            }
+        }
+    }
+
+//    public Vector2[] getDoor_pos() {
+//    }
 }

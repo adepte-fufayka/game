@@ -32,6 +32,10 @@ public class Hero extends Actor {
         this.worldManager = worldManager;
     }
 
+    public Body getBody() {
+        return body;
+    }
+
     @Override
     public void act(float delta) {
         float posX = 0;
@@ -49,7 +53,7 @@ public class Hero extends Actor {
             isEnter = !isEnter;
             enters = true;
         }
-        System.out.println(isEnter);
+        System.out.println(isEnter+ " "+ enters);
         if (!isDash && Gdx.input.isKeyJustPressed(Input.Keys.W))
             if (Jumps > 0) {
                 body.applyForceToCenter(new Vector2(0, vertical_speed), false);
@@ -78,15 +82,13 @@ public class Hero extends Actor {
         System.out.println(body.getLinearVelocity().y);
         if (Math.abs(body.getLinearVelocity().y) > 0.01) Jumps = 0;
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-//            if (isJump) {
-//                isJump = false;
-//          s      nowJumpTime = 0;
         }
         body.setLinearVelocity(posX, body.getLinearVelocity().y);
 //        System.out.println(body.getLinearVelocity());
     }
 
-    public boolean isEnter() {
+    public boolean isDoorEnter() {
+
         return isEnter;
     }
 
