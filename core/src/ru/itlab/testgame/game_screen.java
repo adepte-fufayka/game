@@ -2,8 +2,6 @@ package ru.itlab.testgame;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -12,37 +10,34 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class GameScreen implements Screen {
+public class game_screen implements Screen {
     SpriteBatch background;
     private Camera camera;
     private Hero hero;
-    private Stage stage, stage2;
+    private Stage stage;
     Vector2 pos;
     float speed = 2.5F;
     private WorldManager worldManager;
-    private WorldManager worldManager1;
+//    private WorldManager worldManager1;
     private float accumulator = 0;
     private Box2DDebugRenderer debugRenderer;
     private int width = Gdx.graphics.getWidth();
     private int height = Gdx.graphics.getHeight();
-    private TiledMap map1;
-    private TiledMap bg_map1;
-    private OrthogonalTiledMapRenderer tmr1;
-    private OrthogonalTiledMapRenderer bg_tmr1;
+    private TiledMap map;
+    //    private TiledMap bg_map1;
+    private OrthogonalTiledMapRenderer tmr;
+//    private OrthogonalTiledMapRenderer bg_tmr1;
 
-    private Array<Fixture> mapBody1 = new Array<>();
-    private Array<Fixture> bg_mapBody1 = new Array<>();
+    private Array<Fixture> mapBody = new Array<>();
+    //    private Array<Fixture> bg_mapBody1 = new Array<>();
     private ArrayList<Integer[]> the_stars = new ArrayList<Integer[]>();
 
     public void stars_generation() {
@@ -60,41 +55,38 @@ public class GameScreen implements Screen {
             }
         }
     }
+    public game_screen(float x, float y) {
+        pos = new Vector2(x, y);
+    }
+
 
     @Override
     public void show() {
         worldManager = new WorldManager();
-        worldManager1 = new WorldManager();
+//        worldManager1 = new WorldManager();
         debugRenderer = new Box2DDebugRenderer();
 
         //
 
-        hero = new Hero(new Vector2(28f / Constants.devider, 400f / Constants.devider), worldManager);
+        hero = new Hero(pos, worldManager);
 
         camera = new Camera(hero);
         FillViewport viewport = new FillViewport(Gdx.graphics.getWidth() / 28f, Gdx.graphics.getHeight() / 28f, camera.getCamera());
         stage = new Stage(viewport);
-        stage2 = new Stage();
+//        stage2 = new Stage();
         background = (SpriteBatch) stage.getBatch();
         float mapScale = 1f / (Constants.devider * 0.7f);
-        try {
-            front_map_generator map_generator = new front_map_generator(0, 50);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        map1 = new TmxMapLoader().load("assets/automatic_generated_map.tmx");
-        bg_map1 = new TmxMapLoader().load("assets/bg_automatic_generated_map.tmx");
-        width = Integer.parseInt(map1.getProperties().get("width").toString()) * 32;
-        height = Integer.parseInt(map1.getProperties().get("height").toString()) * 32;
-        tmr1 = new OrthogonalTiledMapRenderer(map1, mapScale, stage.getBatch());
-        bg_tmr1 = new OrthogonalTiledMapRenderer(bg_map1, mapScale, stage2.getBatch());
-        mapBody1 = TiledObjectsConverter.importObjects(map1, worldManager, mapScale);
-        bg_mapBody1 = TiledObjectsConverter.importObjects(bg_map1, worldManager1, mapScale);
+        map = new TmxMapLoader().load("assets/automatic_generated_map.tmx");
+//        bg_map1 = new TmxMapLoader().load("assets/bg_automatic_generated_map.tmx");
+        width = Integer.parseInt(map.getProperties().get("width").toString()) * 32;
+        height = Integer.parseInt(map.getProperties().get("height").toString()) * 32;
+        tmr = new OrthogonalTiledMapRenderer(map, mapScale, stage.getBatch());
+//        bg_tmr1 = new OrthogonalTiledMapRenderer(bg_map1, mapScale, stage2.getBatch());
+        mapBody = TiledObjectsConverter.importObjects(map, worldManager, mapScale);
+//        bg_mapBody1 = TiledObjectsConverter.importObjects(bg_map1, worldManager1, mapScale);
         stage.addActor(hero);
         stars_generation();
-        Gdx.input.setInputProcessor(stage2);
+//        Gdx.input.setInputProcessor(stage2);
     }
 
 //        Button settingsButton = new Button(new SpriteDrawable(new Sprite(new Texture("settings.png"))));
@@ -120,56 +112,30 @@ public class GameScreen implements Screen {
 //        stage.getBatch().end();
     @Override
     public void render(float delta) {
-        if (!hero.isDoorEnter()) {
-            Gdx.input.setInputProcessor(stage);
-            if (hero.entres()) {
-//                Gdx.input.setInputProcessor(stage2);
-                float x = hero.getX(), y = hero.getY();
-//                hero.remove();
-//                hero = null;
-                worldManager1.getWorld().destroyBody(hero.getBody());
-                hero = new Hero(new Vector2(x, y), worldManager);
-            }
-            ScreenUtils.clear(15 / 255f, 9 / 255f, 43 / 255f, 0);
-            doPhysicsStep(delta, worldManager);
-            stage.act();
-            tmr1.setView(camera.getCamera());
-            tmr1.render();
-            stage.draw();
+        if (hero.isDoorEnter()) {
+        }else{
 
-            debugRenderer.render(worldManager.getWorld(), camera.getCamera().combined);
-        } else {
-            Gdx.input.setInputProcessor(stage2);
-            if (hero.entres()) {
-//                Gdx.input.setInputProcessor(stage);
-                float x = hero.getX(), y = hero.getY();
-//                hero.remove();
-//                hero = null;
-                worldManager.getWorld().destroyBody(hero.getBody());
-                hero = new Hero(new Vector2(x, y), worldManager1);
-
-            }
-            ScreenUtils.clear(0 / 255f, 0 / 255f, 0 / 255f, 0);
-            doPhysicsStep(delta, worldManager1);
-            stage2.act();
-            bg_tmr1.setView(camera.getCamera());
-            bg_tmr1.render();
-            stage2.draw();
-            debugRenderer.render(worldManager1.getWorld(), camera.getCamera().combined);
-        }
+        Gdx.input.setInputProcessor(stage);
+        ScreenUtils.clear(15 / 255f, 9 / 255f, 43 / 255f, 0);
+        doPhysicsStep(delta, worldManager);
+        stage.act();
+        tmr.setView(camera.getCamera());
+        tmr.render();
+        stage.draw();
+        debugRenderer.render(worldManager.getWorld(), camera.getCamera().combined);
         camera.update();
-    }
+    }}
 
     @Override
     public void dispose() {
         stage.dispose();
-        stage2.dispose();
+//        stage2.dispose();
         worldManager.dispose();
         debugRenderer.dispose();
-        bg_tmr1.dispose();
-        map1.dispose();
-        tmr1.dispose();
-        map1.dispose();
+//        bg_tmr1.dispose();
+        map.dispose();
+        tmr.dispose();
+//        map1.dispose();
     }
 
     private void doPhysicsStep(float deltaTime, WorldManager world) {
