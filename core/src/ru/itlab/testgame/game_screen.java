@@ -67,6 +67,7 @@ public class game_screen implements Screen {
 
     @Override
     public void show() {
+
         worldManager = new WorldManager();
 //        worldManager1 = new WorldManager();
         debugRenderer = new Box2DDebugRenderer();
@@ -120,7 +121,7 @@ public class game_screen implements Screen {
         if (hero.isDoorEnter()) {
             main_activity.setScreen(new bg_game_screen(hero.getPos().x, hero.getPos().y, main_activity, map_generator));
             dispose();
-            worldManager.dispose();
+//            worldManager.dispose();
         } else {
             Gdx.input.setInputProcessor(stage);
             ScreenUtils.clear(15 / 255f, 9 / 255f, 43 / 255f, 0);

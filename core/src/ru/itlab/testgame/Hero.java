@@ -21,8 +21,8 @@ public class Hero extends Actor {
     private final int Final_DashTime = 16;
     private int dash_time = 0;
     private int dash_divider = 3;
-    private final float horizontal_speed = 350f / Constants.devider;
-    private final float vertical_speed = 100f / (Constants.devider);
+    private final float horizontal_speed = 330f / Constants.devider;
+    private final float vertical_speed = 130f / (Constants.devider);
     private Texture texture = new Texture("hero.png");
     private Vector2 const_size = new Vector2(35f / Constants.devider, 70f / Constants.devider);
     private Body body;
@@ -39,64 +39,51 @@ public class Hero extends Actor {
         doors_pos = Arrays.copyOf(map_generator.getDoor_pos(), map_generator.getDoor_pos().length);
     }
 
+    public float getHorizontal_speed() {
+        return horizontal_speed;
+    }
+
+    public float getVertical_speed() {
+        return vertical_speed;
+    }
+
     public Body getBody() {
         return body;
     }
 
+    private float posX = 0;
+
+    public boolean isDash() {
+        return isDash;
+    }
+
     @Override
     public void act(float delta) {
-        float posX = 0;
+        posX = 0;
         super.act(delta);
-        if (!isDash && Gdx.input.isKeyPressed(Input.Keys.D)) {
-            posX += horizontal_speed;
-            isLeft = false;
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+            right_moving();
         }
-        if (!isDash && Gdx.input.isKeyPressed(Input.Keys.A)) {
-            posX -= horizontal_speed;
-            isLeft = true;
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+            left_moving();
         }
         enters = false;
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            boolean flag = false;
-            for (int i = 0; i < doors_pos.length; i++) {
-                if (body.getPosition().x > doors_pos[i].x - 32 && body.getPosition().x < doors_pos[i].x + 32 && body.getPosition().y < doors_pos[i].y + 32) {
-                    flag = true;
-                    break;
-                }
-            }
-            if (flag) {
-                isEnter = !isEnter;
-                enters = true;
-            }
+            enter_touched();
         }
-        System.out.println(isEnter + " " + enters);
-        System.out.println(body.getPosition());
-        if (!isDash && Gdx.input.isKeyJustPressed(Input.Keys.W))
-            if (Jumps > 0) {
-                body.applyForceToCenter(new Vector2(0, vertical_speed), false);
-                Jumps--;
-            }
-        if (!isDash && Gdx.input.isKeyJustPressed(Input.Keys.SHIFT_LEFT)) {
-            isDash = true;
-//            size.y = const_size.y / 2;
-            if (Jumps == 0) {
-                isDash = false;
-//            size.y=const_size.y;
-            }
-
+//        System.out.println(isEnter + " " + enters);
+//        System.out.println(body.getPosition());
+        if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
+            up_moving();
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SHIFT_LEFT)) {
+            dash_touched();
         }
         if (isDash) {
-
-            posX += 78 * (isLeft ? (dash_time % dash_divider == 0 ? -horizontal_speed : 0) : (dash_time % dash_divider == 0 ? horizontal_speed : 0));
-            dash_time += 1;
-            if (dash_time == Final_DashTime) {
-                dash_time = 0;
-                isDash = false;
-//                size.y=const_size.y;
-            }
+            dash_moving();
         }
         if (Math.abs(body.getLinearVelocity().y) <= 0.01) Jumps = maxJumps;
-        System.out.println(body.getLinearVelocity().y);
+//        System.out.println(body.getLinearVelocity().y);
         if (Math.abs(body.getLinearVelocity().y) > 0.01) Jumps = 0;
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
         }
@@ -104,6 +91,63 @@ public class Hero extends Actor {
 //        System.out.println(body.getLinearVelocity());
     }
 
+    //touch obrabotka
+    public void right_moving() {
+        if (!isDash) {
+            posX += horizontal_speed;
+            isLeft = false;
+        }
+    }
+
+    public void left_moving() {
+        if (!isDash) {
+            posX += -horizontal_speed;
+            isLeft = true;
+        }
+    }
+
+    public void enter_touched() {
+        boolean flag = false;
+        for (int i = 0; i < doors_pos.length; i++) {
+            if (body.getPosition().x * Constants.devider > doors_pos[i].x - 32 && body.getPosition().x * Constants.devider < doors_pos[i].x + 32 && body.getPosition().y * Constants.devider < doors_pos[i].y + 32) {
+                flag = true;
+                break;
+            }
+        }
+        if (flag) {
+            isEnter = !isEnter;
+            enters = true;
+        }
+    }
+
+    public void up_moving() {
+        if (!isDash) {
+            if (Jumps > 0) {
+                body.applyForceToCenter(new Vector2(0, vertical_speed), false);
+                Jumps--;
+            }
+        }
+    }
+
+    public void dash_touched() {
+        if (!isDash) {
+            isDash = true;
+            if (Jumps == 0) {
+                isDash = false;
+            }
+        }
+    }
+
+    public void dash_moving() {
+        posX += 78 * (isLeft ? (dash_time % dash_divider == 0 ? -horizontal_speed : 0) : (dash_time % dash_divider == 0 ? horizontal_speed : 0));
+        dash_time += 1;
+        if (dash_time == Final_DashTime) {
+            dash_time = 0;
+            isDash = false;
+        }
+    }
+
+    //end of touch obrabotka
     public boolean isDoorEnter() {
 
         return isEnter;
