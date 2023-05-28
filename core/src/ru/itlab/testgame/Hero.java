@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -13,6 +14,7 @@ import java.util.Arrays;
 
 public class Hero extends Actor {
     private final int maxJumps = 1;
+
     private int Jumps = maxJumps;
     private boolean enters = false;
     private boolean isEnter = false;
@@ -101,7 +103,7 @@ public class Hero extends Actor {
 
     public void left_moving() {
         if (!isDash) {
-            posX += -horizontal_speed;
+            posX -= horizontal_speed;
             isLeft = true;
         }
     }
@@ -109,7 +111,7 @@ public class Hero extends Actor {
     public void enter_touched() {
         boolean flag = false;
         for (int i = 0; i < doors_pos.length; i++) {
-            if (body.getPosition().x * Constants.devider > doors_pos[i].x - 32 && body.getPosition().x * Constants.devider < doors_pos[i].x + 32 && body.getPosition().y * Constants.devider < doors_pos[i].y + 32) {
+            if (body.getPosition().x * Constants.devider >= doors_pos[i].x - 32 && body.getPosition().x * Constants.devider <= doors_pos[i].x + 32 && body.getPosition().y * Constants.devider <= doors_pos[i].y + 32) {
                 flag = true;
                 break;
             }

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -15,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
@@ -23,6 +25,7 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 
 public class bg_game_screen implements Screen {
     private front_map_generator map_generator;
+    private SpriteBatch button_batch = new SpriteBatch();
     private Camera camera;
     private Game main_activity;
     private float accumulator = 0;
@@ -76,21 +79,17 @@ public class bg_game_screen implements Screen {
         tmr = new OrthogonalTiledMapRenderer(map, mapScale, stage.getBatch());
         mapBody = TiledObjectsConverter.importObjects(map, worldManager, mapScale);
 
-        stage.addActor(hero);
-        stage.addActor(W);
-        stage.addActor(A);
-        stage.addActor(D);
-        stage.addActor(SHIFT);
-        stage.addActor(ENTER);
         W.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                System.out.println("w touched");
                 hero.up_moving();
             }
         });
         A.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                System.out.println("a touched");
                 hero.left_moving();
             }
         });
@@ -98,6 +97,7 @@ public class bg_game_screen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 hero.right_moving();
+                System.out.println("d touched");
             }
         });
         ENTER.addListener(new ClickListener() {
@@ -105,19 +105,29 @@ public class bg_game_screen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 hero.enter_touched();
+                System.out.println("enter touched");
             }
         });
         SHIFT.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 hero.dash_touched();
+                System.out.println("shift touched");
             }
         });
-        W.setPosition(64f / Constants.devider, 64f / Constants.devider);
-        A.setPosition(32f / Constants.devider, 32f / Constants.devider);
-        D.setPosition(96f / Constants.devider, 32f / Constants.devider);
-        SHIFT.setPosition(32f / Constants.devider, 128f / Constants.devider);
-        ENTER.setPosition(96f / Constants.devider, 128f / Constants.devider);
+//        W.setPosition(64f / Constants.devider, 64f / Constants.devider);
+//        A.setPosition(32f / Constants.devider, 32f / Constants.devider);
+//        D.setPosition(96f / Constants.devider, 32f / Constants.devider);
+//        SHIFT.setPosition(32f / Constants.devider, 128f / Constants.devider);
+//        ENTER.setPosition(96f / Constants.devider, 128f / Constants.devider);
+        Table table = new Table();
+        table.add(A).width(5).height(5);
+        table.add(W).width(5).height(5);
+        table.add(D).width(5).height(5);
+        table.add(SHIFT).width(5).height(5);
+        table.add(ENTER).width(5).height(5);
+        stage.addActor(hero);
+        stage.addActor(table);
     }
 
     public void render(float delta) {
