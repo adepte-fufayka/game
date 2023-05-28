@@ -36,7 +36,6 @@ public class bg_game_screen implements Screen {
     private Box2DDebugRenderer debugRenderer;
     private OrthogonalTiledMapRenderer tmr;
     private TiledMap map;
-    Vector2 velocities = new Vector2(0, 0);
     private Array<Fixture> mapBody = new Array<>();
     private ImageButton W, A, D, ENTER, SHIFT;
 
@@ -49,19 +48,20 @@ public class bg_game_screen implements Screen {
 
     public void show() {
         TextureRegionDrawable trd = new TextureRegionDrawable(W_texture);
-        trd.setMinSize(20f / Constants.devider, 20f / Constants.devider);
+        float multiply = 1.6f;
+        trd.setMinSize(20f * multiply / Constants.devider, 20f * multiply / Constants.devider);
         W = new ImageButton(trd);
         trd = new TextureRegionDrawable(A_texture);
-        trd.setMinSize(20f / Constants.devider, 20f / Constants.devider);
+        trd.setMinSize(20f * multiply / Constants.devider, 20f * multiply / Constants.devider);
         A = new ImageButton(trd);
         trd = new TextureRegionDrawable(D_texture);
-        trd.setMinSize(20f / Constants.devider, 20f / Constants.devider);
+        trd.setMinSize(20f * multiply / Constants.devider, 20f * multiply / Constants.devider);
         D = new ImageButton(trd);
         trd = new TextureRegionDrawable(SHIFT_texture);
-        trd.setMinSize(20f / Constants.devider, 20f / Constants.devider);
+        trd.setMinSize(20f * multiply / Constants.devider, 20f * multiply / Constants.devider);
         SHIFT = new ImageButton(trd);
         trd = new TextureRegionDrawable(ENTER_texture);
-        trd.setMinSize(20f / Constants.devider, 20f / Constants.devider);
+        trd.setMinSize(20f * multiply / Constants.devider, 20f * multiply / Constants.devider);
         ENTER = new ImageButton(trd);
         worldManager = new WorldManager();
         debugRenderer = new Box2DDebugRenderer();
@@ -85,31 +85,32 @@ public class bg_game_screen implements Screen {
         W.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                pos = new Vector2(pos.x, pos.y + hero.getVertical_speed());
+                hero.up_moving();
             }
         });
         A.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                pos = new Vector2(pos.x - hero.getHorizontal_speed(), pos.y);
+                hero.left_moving();
             }
         });
         D.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                pos = new Vector2(pos.x + hero.getHorizontal_speed(), pos.y);
+                hero.right_moving();
             }
         });
         ENTER.addListener(new ClickListener() {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
+                hero.enter_touched();
             }
         });
         SHIFT.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                hero.dash_touched();
             }
         });
         W.setPosition(64f / Constants.devider, 64f / Constants.devider);

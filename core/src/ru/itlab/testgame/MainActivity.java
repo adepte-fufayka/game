@@ -16,7 +16,7 @@ public class MainActivity extends Game {
             throw new RuntimeException(e);
         }
         Gdx.graphics.setForegroundFPS(120);
-        setScreen(new game_screen(28f / Constants.devider, 400f / Constants.devider, this, map_generator));
+        setScreen(new bg_game_screen(5*32f / Constants.devider, 400f / Constants.devider, this, map_generator));
     }
 
     private front_map_generator map_generator;
