@@ -18,10 +18,12 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class game_screen implements Screen {
     SpriteBatch background;
     private Game main_activity;
+    private enemy[] enemies;
     private front_map_generator map_generator;
     private Camera camera;
     private Hero hero;
@@ -58,7 +60,8 @@ public class game_screen implements Screen {
         }
     }
 
-    public game_screen(float x, float y, Game game, front_map_generator map_generator) {
+    public game_screen(float x, float y, Game game, front_map_generator map_generator, enemy[] enemies) {
+        this.enemies = Arrays.copyOf(enemies, enemies.length);
         this.map_generator = map_generator;
         pos = new Vector2(x, y);
         main_activity = game;
@@ -74,7 +77,7 @@ public class game_screen implements Screen {
 
         //
 
-        hero = new Hero(pos, worldManager,map_generator);
+        hero = new Hero(pos, worldManager, map_generator);
 
         camera = new Camera(hero);
         FillViewport viewport = new FillViewport(Gdx.graphics.getWidth() / 28f, Gdx.graphics.getHeight() / 28f, camera.getCamera());
@@ -119,7 +122,7 @@ public class game_screen implements Screen {
     @Override
     public void render(float delta) {
         if (hero.isDoorEnter()) {
-            main_activity.setScreen(new bg_game_screen(hero.getPos().x, hero.getPos().y, main_activity, map_generator));
+            main_activity.setScreen(new bg_game_screen(hero.getPos().x, hero.getPos().y, main_activity, map_generator,enemies));
             dispose();
 //            worldManager.dispose();
         } else {
