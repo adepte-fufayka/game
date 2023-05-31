@@ -14,6 +14,8 @@ import java.util.Arrays;
 
 public class Hero extends Actor {
     private final int maxJumps = 1;
+    private float hp = 100f;
+    private float dmg = 30f;
 
     private int Jumps = maxJumps;
     private boolean enters = false;
@@ -46,6 +48,23 @@ public class Hero extends Actor {
         doors_pos = Arrays.copyOf(map_generator.getDoor_pos(), map_generator.getDoor_pos().length);
     }
 
+    public float getHp() {
+        return hp;
+    }
+
+    public void HeroGetHit(float dmg) {
+        hp -= dmg;
+        if (hp < 0) {
+            is_death = true;
+        }
+        is_get_hit = true;
+        get_hit_time = 0f;
+    }
+
+    public float getDmg() {
+        return dmg;
+    }
+
     public float getHorizontal_speed() {
         return horizontal_speed;
     }
@@ -65,26 +84,28 @@ public class Hero extends Actor {
         return isDash;
     }
 
+    private boolean falg1 = true;
+
     @Override
     public void act(float delta) {
         super.act(delta);
 //        is_moving = false;
-        boolean flag = true;
+//        boolean flag = true;
+        System.out.println(is_moving);
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
             attack();
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             right_moving();
-            flag = false;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             left_moving();
-            flag = false;
         }
-        is_moving = !flag && !is_jumping;
-//        enters = false;
+        is_moving = !falg1 && !is_attacking && !is_jumping;
+        System.out.println(is_moving);
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             enter_touched();
         }
+        falg1 = true;
         if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
             up_moving();
         }
@@ -186,6 +207,10 @@ public class Hero extends Actor {
         get_hit_time = 0f;
     }
 
+    public boolean isIs_attacking() {
+        return is_attacking;
+    }
+
     private void createDeathAnimation() {
         int len = (int) for_death_animation.x;
         Texture local_texture = new Texture(Gdx.files.internal("assets/Ronin/spr_RoninDeath_strip.png"));
@@ -233,6 +258,7 @@ public class Hero extends Actor {
             if (!is_moving)
                 moving_time = 0f;
             is_moving = !is_attacking && !is_jumping;
+            falg1 = false;
         }
     }
 
@@ -249,6 +275,7 @@ public class Hero extends Actor {
             if (!is_moving)
                 moving_time = 0f;
             is_moving = !is_attacking && !is_jumping;
+            falg1 = false;
         }
     }
 
@@ -327,14 +354,23 @@ public class Hero extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        idle_time += Gdx.graphics.getDeltaTime();
+        if (is_death)
+            idle_time += Gdx.graphics.getDeltaTime();
         idle_time %= ((int) for_idle_animation.x * for_idle_animation.y);
         TextureRegion local_texture = IdleAnimation.getKeyFrame(idle_time);
 //        if (is_attacking{reg=}
 //        Texture local_texture = reg.getTexture();
 //        Texture local_texture=;
         float multiply = 1f;
-        if (is_attacking) {
+        if (is_death) {
+            death_time += Gdx.graphics.getDeltaTime();
+            death_time %= (int) for_death_animation.x * for_death_animation.y;
+            local_texture = DeathAnimation.getKeyFrame(death_time);
+        } else if (is_get_hit) {
+            get_hit_time += Gdx.graphics.getDeltaTime();
+            get_hit_time %= (int) for_get_hit_animation.x * for_get_hit_animation.y;
+            local_texture = GetHitAnimation.getKeyFrame(get_hit_time);
+        } else if (is_attacking) {
             attack_time += Gdx.graphics.getDeltaTime();
             multiply = 2.5f;
             if (attack_time >= for_attack_animation.y * for_attack_animation.x) {
@@ -342,11 +378,6 @@ public class Hero extends Actor {
                 is_attacking = false;
             }
             local_texture = AttackAnimation.getKeyFrame(attack_time);
-        } else if (is_moving) {
-            moving_time += Gdx.graphics.getDeltaTime();
-//            System.out.println(moving_time);
-            moving_time %= (int) for_move_animation.x * for_move_animation.y;
-            local_texture = MovingAnimation.getKeyFrame(moving_time);
         } else if (is_dashing) {
             dash_staints_time += Gdx.graphics.getDeltaTime();
             dash_staints_time %= (int) for_dash_animation.x * for_dash_animation.y;
@@ -357,14 +388,11 @@ public class Hero extends Actor {
             jump_time %= (int) for_jump_animation.x * for_jump_animation.y;
             System.out.println(jump_time);
             local_texture = JumpAnimation.getKeyFrame(jump_time);
-        } else if (is_get_hit) {
-            get_hit_time += Gdx.graphics.getDeltaTime();
-            get_hit_time %= (int) for_get_hit_animation.x * for_get_hit_animation.y;
-            local_texture = GetHitAnimation.getKeyFrame(get_hit_time);
-        } else if (is_death) {
-            death_time += Gdx.graphics.getDeltaTime();
-            death_time %= (int) for_death_animation.x * for_death_animation.y;
-            local_texture = DeathAnimation.getKeyFrame(death_time);
+        } else if (is_moving) {
+            moving_time += Gdx.graphics.getDeltaTime();
+//            System.out.println(moving_time);
+            moving_time %= (int) for_move_animation.x * for_move_animation.y;
+            local_texture = MovingAnimation.getKeyFrame(moving_time);
         }
         super.draw(batch, parentAlpha);
         batch.draw(local_texture, isLeft ? multiply * size.x + body.getPosition().x : body.getPosition().x, body.getPosition().y, isLeft ? -multiply * size.x : multiply * size.x, size.y);

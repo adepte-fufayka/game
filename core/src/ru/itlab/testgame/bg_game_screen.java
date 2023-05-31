@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -29,6 +31,7 @@ public class bg_game_screen implements Screen {
     private Camera camera;
     private SpriteBatch ui2 = new SpriteBatch();
     private enemy[] enemies;
+    BitmapFont font = new BitmapFont();
 
     private Stage ui;
     private Game main_activity;
@@ -38,14 +41,14 @@ public class bg_game_screen implements Screen {
     private Stage stage;
     int width = 0;
     int height = 0;
-    private final Texture W_texture = new Texture("assets/button_textures/w_texture.png"), A_texture = new Texture("assets/button_textures/a_texture.png"), D_texture = new Texture("assets/button_textures/d_texture.png"), SHIFT_texture = new Texture("assets/button_textures/shift_texture.png"), ENTER_texture = new Texture("assets/button_textures/enter_texture.png");
+    private final Texture attack_texture = new Texture("assets/button_textures/attack_texture.png"), W_texture = new Texture("assets/button_textures/w_texture.png"), A_texture = new Texture("assets/button_textures/a_texture.png"), D_texture = new Texture("assets/button_textures/d_texture.png"), SHIFT_texture = new Texture("assets/button_textures/shift_texture.png"), ENTER_texture = new Texture("assets/button_textures/enter_texture.png");
     private WorldManager worldManager;
     private Box2DDebugRenderer debugRenderer;
     private OrthogonalTiledMapRenderer tmr;
     private TiledMap map;
     private Array<Fixture> mapBody = new Array<>();
-    private ImageButton W, A, D, ENTER, SHIFT;
-    private boolean is_w, is_a, is_d, is_enter, is_shift;
+    private ImageButton W, A, D, ENTER, SHIFT, ATTACK;
+    private boolean is_w, is_a, is_d, is_enter, is_shift, is_atc;
 
 
     public bg_game_screen(float x, float y, Game game, front_map_generator map_generator, enemy[] enemies) {
@@ -61,8 +64,9 @@ public class bg_game_screen implements Screen {
 
     public void show() {
         TextureRegionDrawable trd = new TextureRegionDrawable(W_texture);
-        float multiply = 1.6f;
-        trd.setMinSize(20f * multiply / Constants.devider, 20f * multiply / Constants.devider);
+        float multiply = 6.4f;
+        float multiply2 = Gdx.graphics.getWidth() / 1440f;
+        trd.setMinSize(20f * multiply, 20f * multiply);
         W = new ImageButton(trd);
         trd = new TextureRegionDrawable(A_texture);
         trd.setMinSize(20f * multiply, 20f * multiply);
@@ -76,6 +80,9 @@ public class bg_game_screen implements Screen {
         trd = new TextureRegionDrawable(ENTER_texture);
         trd.setMinSize(20f * multiply, 20f * multiply);
         ENTER = new ImageButton(trd);
+        trd = new TextureRegionDrawable(attack_texture);
+        trd.setMinSize(20f * multiply, 20f * multiply);
+        ATTACK = new ImageButton(trd);
         debugRenderer = new Box2DDebugRenderer();
         hero = new Hero(pos, worldManager, map_generator);
         camera = new Camera(hero);
@@ -88,7 +95,19 @@ public class bg_game_screen implements Screen {
         height = Integer.parseInt(map.getProperties().get("height").toString()) * 32;
         tmr = new OrthogonalTiledMapRenderer(map, mapScale, stage.getBatch());
         mapBody = TiledObjectsConverter.importObjects(map, worldManager, mapScale);
+        ATTACK.addListener(new ClickListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                is_atc = true;
+                return true;
+            }
 
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                is_atc = false;
+                super.touchUp(event, x, y, pointer, button);
+            }
+        });
         W.addListener(new ClickListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 is_w = true;
@@ -148,18 +167,18 @@ public class bg_game_screen implements Screen {
                 is_shift = false;
             }
         });
-
-        W.setPosition(64f, 64f);
-        A.setPosition(32f, 32f);
-        D.setPosition(96f, 32f);
-        SHIFT.setPosition(32f, 128f);
-        ENTER.setPosition(96f, 128f);
+        ATTACK.setPosition(Gdx.graphics.getWidth() - 20 * multiply * multiply2 * 2, 20 * 0 * multiply * multiply2);
+        W.setPosition(20 * 1 * multiply * multiply2, 20 * 1 * multiply * multiply2);
+        A.setPosition(0f, 0f);
+        D.setPosition(20 * multiply * 2 * multiply2, 0f);
+        SHIFT.setPosition(0, 20 * 2 * multiply * multiply2);
+        ENTER.setPosition(Gdx.graphics.getWidth() - 20 * multiply * multiply2 * 2, 20 * 2 * multiply * multiply2);
         ui.addActor(W);
         ui.addActor(A);
         ui.addActor(D);
         ui.addActor(SHIFT);
         ui.addActor(ENTER);
-
+        ui.addActor(ATTACK);
         for (int i = 0; i < enemies.length; i++) {
             stage.addActor(enemies[i]);
         }
@@ -177,33 +196,52 @@ public class bg_game_screen implements Screen {
         //        stage.addActor(table);
     }
 
+    private int time1 = 0;
+
     public void render(float delta) {
-        Gdx.input.setInputProcessor(ui);
+        time1 += 1;
+        if (time1 % 5 == 0) {
+            for (int i = 0; i < enemies.length; i++) {
+                if (enemies[i].getPosition().x + 48 / Constants.devider > hero.getPos().x && enemies[i].getPosition().x - 48 / Constants.devider < hero.getPos().x && hero.getPos().y == enemies[i].getPosition().y) {
+                    if (hero.isIs_attacking()) {
+                        enemies[i].getDamage(hero.getDmg());
+                    } else hero.HeroGetHit(enemies[i].getDmg());
+                    System.out.println("contact");
+                }
+            }
+        }
+//        Gdx.input.setInputProcessor(ui);
 //        System.out.println(camera.getCamera().position);
 //        if (camera.getCamera().position.y < Gdx.graphics.getHeight() / 2f / Constants.devider)
 //            camera.getCamera().position.y = Gdx.graphics.getHeight() / 2f / Constants.devider;
 //        if (camera.getCamera().position.x < Gdx.graphics.getWidth() / 2f / Constants.devider)
 //            camera.getCamera().position.x =Gdx.graphics.getWidth() / 2f / Constants.devider;
+        boolean flag = false;
         if (is_a) hero.left_moving();
         if (is_d) hero.right_moving();
         if (is_w) hero.up_moving();
         if (is_enter) hero.enter_touched();
         if (is_shift) hero.dash_touched();
+        if (is_atc) hero.attack();
         if (hero.isDoorEnter()) {
             main_activity.setScreen(new game_screen(hero.getPos().x, hero.getPos().y, main_activity, map_generator, enemies));
             dispose();
         } else {
-            Gdx.input.setInputProcessor(stage);
+//            Gdx.input.setInputProcessor(stage);
             ScreenUtils.clear(15 / 255f, 9 / 255f, 43 / 255f, 0);
             doPhysicsStep(delta, worldManager);
             stage.act();
             tmr.setView(camera.getCamera());
             tmr.render();
             stage.draw();
-            ui.act();
-            ui.draw();
             debugRenderer.render(worldManager.getWorld(), camera.getCamera().combined);
             camera.update();
+            ui.act();
+            ui.getBatch().begin();
+            font.draw(ui.getBatch(), "" + hero.getHp(), 0, Gdx.graphics.getHeight());
+            ui.getBatch().end();
+            ui.draw();
+
         }
     }
 
