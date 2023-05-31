@@ -161,7 +161,7 @@ public class Hero extends Actor {
 
     private void createIdleAnimation() {
         int len = (int) for_idle_animation.x;
-        Texture local_texture = new Texture(Gdx.files.internal("assets/Ronin/spr_RoninIdle_strip.png"));
+        Texture local_texture = new Texture(Gdx.files.internal("Ronin/spr_RoninIdle_strip.png"));
         TextureRegion[][] tmp = TextureRegion.split(local_texture, local_texture.getWidth() / len, local_texture.getHeight());
         TextureRegion[] frames = new TextureRegion[len];
         for (int i = 0; i < len; i++) {
@@ -173,7 +173,7 @@ public class Hero extends Actor {
 
     private void createMovingAnimation() {
         int len = (int) for_move_animation.x;
-        Texture local_texture = new Texture(Gdx.files.internal("assets/Ronin/spr_RoninRun_strip.png"));
+        Texture local_texture = new Texture(Gdx.files.internal("Ronin/spr_RoninRun_strip.png"));
         TextureRegion[][] tmp = TextureRegion.split(local_texture, local_texture.getWidth() / len, local_texture.getHeight());
         TextureRegion[] frames = new TextureRegion[len];
         for (int i = 0; i < len; i++) {
@@ -185,7 +185,7 @@ public class Hero extends Actor {
 
     private void createJumpAnimation() {
         int len = (int) for_jump_animation.x;
-        Texture local_texture = new Texture(Gdx.files.internal("assets/Ronin/spr_RoninJump_strip.png"));
+        Texture local_texture = new Texture(Gdx.files.internal("Ronin/spr_RoninJump_strip.png"));
         TextureRegion[][] tmp = TextureRegion.split(local_texture, local_texture.getWidth() / len, local_texture.getHeight());
         TextureRegion[] frames = new TextureRegion[len];
         for (int i = 0; i < len; i++) {
@@ -197,7 +197,7 @@ public class Hero extends Actor {
 
     private void createGetHitAnimation() {
         int len = (int) for_get_hit_animation.x;
-        Texture local_texture = new Texture(Gdx.files.internal("assets/Ronin/spr_RoninGetHit_strip.png"));
+        Texture local_texture = new Texture(Gdx.files.internal("Ronin/spr_RoninGetHit_strip.png"));
         TextureRegion[][] tmp = TextureRegion.split(local_texture, local_texture.getWidth() / len, local_texture.getHeight());
         TextureRegion[] frames = new TextureRegion[len];
         for (int i = 0; i < len; i++) {
@@ -213,7 +213,7 @@ public class Hero extends Actor {
 
     private void createDeathAnimation() {
         int len = (int) for_death_animation.x;
-        Texture local_texture = new Texture(Gdx.files.internal("assets/Ronin/spr_RoninDeath_strip.png"));
+        Texture local_texture = new Texture(Gdx.files.internal("Ronin/spr_RoninDeath_strip.png"));
         TextureRegion[][] tmp = TextureRegion.split(local_texture, local_texture.getWidth() / len, local_texture.getHeight());
         TextureRegion[] frames = new TextureRegion[len];
         for (int i = 0; i < len; i++) {
@@ -225,7 +225,7 @@ public class Hero extends Actor {
 
     private void createDashAnimation() {
         int len = (int) for_dash_animation.x;
-        Texture local_texture = new Texture(Gdx.files.internal("assets/Ronin/spr_RoninDash_strip.png"));
+        Texture local_texture = new Texture(Gdx.files.internal("Ronin/spr_RoninDash_strip.png"));
         TextureRegion[][] tmp = TextureRegion.split(local_texture, local_texture.getWidth() / len, local_texture.getHeight());
         TextureRegion[] frames = new TextureRegion[len];
         for (int i = 0; i < len; i++) {
@@ -237,7 +237,7 @@ public class Hero extends Actor {
 
     private void createAttackAnimation() {
         int len = (int) for_attack_animation.x;
-        Texture local_texture = new Texture(Gdx.files.internal("assets/Ronin/spr_RoninAttack_strip.png"));
+        Texture local_texture = new Texture(Gdx.files.internal("Ronin/spr_RoninAttack_strip.png"));
         TextureRegion[][] tmp = TextureRegion.split(local_texture, local_texture.getWidth() / len, local_texture.getHeight());
         TextureRegion[] frames = new TextureRegion[len];
         for (int i = 0; i < len; i++) {

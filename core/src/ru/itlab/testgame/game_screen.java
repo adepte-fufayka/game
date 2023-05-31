@@ -37,7 +37,7 @@ public class game_screen implements Screen {
     private Stage stage;
     private ImageButton W, A, D, ENTER, SHIFT, ATTACK;
     private boolean is_w, is_a, is_d, is_enter, is_shift, is_atc;
-    private final Texture attack_texture = new Texture("assets/button_textures/attack_texture.png"), W_texture = new Texture("assets/button_textures/w_texture.png"), A_texture = new Texture("assets/button_textures/a_texture.png"), D_texture = new Texture("assets/button_textures/d_texture.png"), SHIFT_texture = new Texture("assets/button_textures/shift_texture.png"), ENTER_texture = new Texture("assets/button_textures/enter_texture.png");
+    private final Texture attack_texture = new Texture("button_textures/attack_texture.png"), W_texture = new Texture("button_textures/w_texture.png"), A_texture = new Texture("button_textures/a_texture.png"), D_texture = new Texture("button_textures/d_texture.png"), SHIFT_texture = new Texture("button_textures/shift_texture.png"), ENTER_texture = new Texture("button_textures/enter_texture.png");
     private Stage ui;
     Vector2 pos;
     float speed = 2.5F;
@@ -118,7 +118,7 @@ public class game_screen implements Screen {
 //        stage2 = new Stage();
         background = (SpriteBatch) stage.getBatch();
         float mapScale = 1f / (Constants.devider * 0.7f);
-        map = new TmxMapLoader().load("assets/automatic_generated_map.tmx");
+        map = new TmxMapLoader().load("automatic_generated_map.tmx");
 //        bg_map1 = new TmxMapLoader().load("assets/bg_automatic_generated_map.tmx");
         width = Integer.parseInt(map.getProperties().get("width").toString()) * 32;
         height = Integer.parseInt(map.getProperties().get("height").toString()) * 32;
@@ -200,11 +200,11 @@ public class game_screen implements Screen {
             }
         });
         ATTACK.setPosition(Gdx.graphics.getWidth() - 20 * multiply * multiply2 * 2, 20 * 0 * multiply * multiply2);
-        W.setPosition(20 * 1 * multiply * multiply2, 20 * 1 * multiply * multiply2);
-        A.setPosition(0f, 0f);
-        D.setPosition(20 * multiply * 2 * multiply2, 0f);
-        SHIFT.setPosition(0, 20 * 2 * multiply * multiply2);
-        ENTER.setPosition(Gdx.graphics.getWidth() - 20 * multiply * multiply2 * 2, 20 * 2 * multiply * multiply2);
+        W.setPosition(Gdx.graphics.getWidth() - 20 * 2 * multiply * multiply2, 20 * 2 * multiply * multiply2);
+        A.setPosition(20 * multiply * 0.5f * multiply2, 20 * multiply * 0.5f * multiply2);
+        D.setPosition(20 * multiply * 2.5f * multiply2, 20 * multiply * 0.5f * multiply2);
+        SHIFT.setPosition(20 * multiply * 1.5f * multiply2, 20 * 1 * multiply * multiply2);
+        ENTER.setPosition(Gdx.graphics.getWidth() - 20 * multiply * multiply2 * 2, 20 * 1 * multiply * multiply2);
         ui.addActor(W);
         ui.addActor(A);
         ui.addActor(D);
@@ -245,7 +245,7 @@ public class game_screen implements Screen {
         if (is_shift) hero.dash_touched();
         if (is_atc) hero.attack();
         if (hero.isDoorEnter()) {
-            main_activity.setScreen(new bg_game_screen(hero.getPos().x, hero.getPos().y, main_activity, map_generator,enemies));
+            main_activity.setScreen(new bg_game_screen(hero.getPos().x, hero.getPos().y, main_activity, map_generator, enemies));
             dispose();
 //            worldManager.dispose();
         } else {
@@ -256,7 +256,7 @@ public class game_screen implements Screen {
             tmr.setView(camera.getCamera());
             tmr.render();
             stage.draw();
-            debugRenderer.render(worldManager.getWorld(), camera.getCamera().combined);
+//            debugRenderer.render(worldManager.getWorld(), camera.getCamera().combined);
             camera.update();
             ui.act();
             ui.getBatch().begin();

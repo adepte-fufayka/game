@@ -103,7 +103,7 @@ public class enemy extends Actor {
     //    public void setWorld_manager(WorldManager worldManager)
     private void createIdleAnimation() {
         int len = (int) for_idle_animation.x;
-        Texture local_texture = new Texture(Gdx.files.internal("assets/enemies_assets/enemy1/enemy_idle.png"));
+        Texture local_texture = new Texture(Gdx.files.internal("enemies_assets/enemy1/enemy_idle.png"));
         TextureRegion[][] tmp = TextureRegion.split(local_texture, local_texture.getWidth() / len, local_texture.getHeight());
         TextureRegion[] frames = new TextureRegion[len];
         for (int i = 0; i < len; i++) {
@@ -115,7 +115,7 @@ public class enemy extends Actor {
 
     private void createGetDamageAnimation() {
         int len = (int) for_get_dmg_animation.x;
-        Texture local_texture = new Texture(Gdx.files.internal("assets/enemies_assets/enemy1/enemy_get_damage.png"));
+        Texture local_texture = new Texture(Gdx.files.internal("enemies_assets/enemy1/enemy_get_damage.png"));
         TextureRegion[][] tmp = TextureRegion.split(local_texture, local_texture.getWidth() / len, local_texture.getHeight());
         TextureRegion[] frames = new TextureRegion[len];
         for (int i = 0; i < len; i++) {
@@ -127,7 +127,7 @@ public class enemy extends Actor {
 
     private void createDeathAnimation() {
         int len = (int) for_death_animation.x;
-        Texture local_texture = new Texture(Gdx.files.internal("assets/enemies_assets/enemy1/enemy_died.png"));
+        Texture local_texture = new Texture(Gdx.files.internal("enemies_assets/enemy1/enemy_died.png"));
         TextureRegion[][] tmp = TextureRegion.split(local_texture, local_texture.getWidth() / len, local_texture.getHeight());
         TextureRegion[] frames = new TextureRegion[len];
         for (int i = 0; i < len; i++) {
@@ -139,7 +139,7 @@ public class enemy extends Actor {
 
     private void createAttackAnimation() {
         int len = (int) for_attack_animation.x;
-        Texture local_texture = new Texture(Gdx.files.internal("assets/enemies_assets/enemy1/enemy_attack.png"));
+        Texture local_texture = new Texture(Gdx.files.internal("enemies_assets/enemy1/enemy_attack.png"));
         TextureRegion[][] tmp = TextureRegion.split(local_texture, local_texture.getWidth() / len, local_texture.getHeight());
         TextureRegion[] frames = new TextureRegion[len];
         for (int i = 0; i < len; i++) {

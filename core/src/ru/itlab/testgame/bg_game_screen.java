@@ -41,7 +41,7 @@ public class bg_game_screen implements Screen {
     private Stage stage;
     int width = 0;
     int height = 0;
-    private final Texture attack_texture = new Texture("assets/button_textures/attack_texture.png"), W_texture = new Texture("assets/button_textures/w_texture.png"), A_texture = new Texture("assets/button_textures/a_texture.png"), D_texture = new Texture("assets/button_textures/d_texture.png"), SHIFT_texture = new Texture("assets/button_textures/shift_texture.png"), ENTER_texture = new Texture("assets/button_textures/enter_texture.png");
+    private final Texture attack_texture = new Texture("button_textures/attack_texture.png"), W_texture = new Texture("button_textures/w_texture.png"), A_texture = new Texture("button_textures/a_texture.png"), D_texture = new Texture("button_textures/d_texture.png"), SHIFT_texture = new Texture("button_textures/shift_texture.png"), ENTER_texture = new Texture("button_textures/enter_texture.png");
     private WorldManager worldManager;
     private Box2DDebugRenderer debugRenderer;
     private OrthogonalTiledMapRenderer tmr;
@@ -90,7 +90,7 @@ public class bg_game_screen implements Screen {
         stage = new Stage(viewport);
         ui = new Stage();
         float mapScale = 1f / (Constants.devider * 0.7f);
-        map = new TmxMapLoader().load("assets/bg_automatic_generated_map.tmx");
+        map = new TmxMapLoader().load("bg_automatic_generated_map.tmx");
         width = Integer.parseInt(map.getProperties().get("width").toString()) * 32;
         height = Integer.parseInt(map.getProperties().get("height").toString()) * 32;
         tmr = new OrthogonalTiledMapRenderer(map, mapScale, stage.getBatch());
@@ -168,11 +168,11 @@ public class bg_game_screen implements Screen {
             }
         });
         ATTACK.setPosition(Gdx.graphics.getWidth() - 20 * multiply * multiply2 * 2, 20 * 0 * multiply * multiply2);
-        W.setPosition(20 * 1 * multiply * multiply2, 20 * 1 * multiply * multiply2);
-        A.setPosition(0f, 0f);
-        D.setPosition(20 * multiply * 2 * multiply2, 0f);
-        SHIFT.setPosition(0, 20 * 2 * multiply * multiply2);
-        ENTER.setPosition(Gdx.graphics.getWidth() - 20 * multiply * multiply2 * 2, 20 * 2 * multiply * multiply2);
+        W.setPosition(Gdx.graphics.getWidth() - 20 * 2 * multiply * multiply2, 20 * 2 * multiply * multiply2);
+        A.setPosition(20 * multiply * 0.5f * multiply2, 20 * multiply * 0.5f * multiply2);
+        D.setPosition(20 * multiply * 2.5f * multiply2, 20 * multiply * 0.5f * multiply2);
+        SHIFT.setPosition(20 * multiply * 1.5f * multiply2, 20 * 1 * multiply * multiply2);
+        ENTER.setPosition(Gdx.graphics.getWidth() - 20 * multiply * multiply2 * 2, 20 * 1 * multiply * multiply2);
         ui.addActor(W);
         ui.addActor(A);
         ui.addActor(D);
@@ -188,8 +188,8 @@ public class bg_game_screen implements Screen {
 //        table.add(D).width(5).height(5);
 //        table.add(SHIFT).width(5).height(5);
 //        table.add(ENTER).width(5).height(5);
-        stage.setDebugAll(true);
-        ui.setDebugAll(true);
+//        stage.setDebugAll(true);
+//        ui.setDebugAll(true);
         stage.addActor(hero);
 //        InputMultiplexer input = new InputMultiplexer(stage, ui);
         Gdx.input.setInputProcessor(ui);
@@ -234,7 +234,7 @@ public class bg_game_screen implements Screen {
             tmr.setView(camera.getCamera());
             tmr.render();
             stage.draw();
-            debugRenderer.render(worldManager.getWorld(), camera.getCamera().combined);
+//            debugRenderer.render(worldManager.getWorld(), camera.getCamera().combined);
             camera.update();
             ui.act();
             ui.getBatch().begin();

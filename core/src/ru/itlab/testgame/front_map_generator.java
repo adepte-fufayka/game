@@ -37,11 +37,13 @@ public class front_map_generator {
     }
 
     public front_map_generator(int zone, int map_len) throws IOException {
+        System.out.println("map_gen_start");
         Create(map_len);
     }
 
     private void Create(int map_len) throws IOException {
-        FileHandle folder = Gdx.files.internal("assets/tiled_map_assets");
+        FileHandle folder = Gdx.files.internal("tiled_map_assets");
+        System.out.println(folder.list().length);
 //        list_of_maps = Arrays.copyOf(, folder.file().listFiles().length);
         list_of_maps = new FileHandle[folder.list().length];
         int hgfr = 0;
@@ -53,7 +55,7 @@ public class front_map_generator {
         for (int i = 0; i < tiledMapAssets.length; i++) {
             tiledMapAssets[i] = new TmxMapLoader().load(list_of_maps[i].path());
         }
-
+        System.out.println("input successful");
         Randomise(map_len);
     }
 
@@ -63,17 +65,21 @@ public class front_map_generator {
         tile_map_indexes = new int[len];
         bg_tile_map_indexes = new int[len];
         for (int i = 0; i < len; i++) {
+            System.out.println(i);
             int flag = tiledMapAssets.length;
             while (flag >= tiledMapAssets.length || flag < tiledMapAssets.length / 2 || i > 0 && flag == tile_map_indexes[i - 1]) {
                 flag = (int) (Math.random() * tiledMapAssets.length + Math.random());
+                System.out.println(flag);
             }
             map[i] = tiledMapAssets[flag];
             tile_map_indexes[i] = flag;
             bg_tile_map_indexes[i] = flag - tiledMapAssets.length / 2;
+            System.out.println(tile_map_indexes[i]);
             if (i > 0) {
                 map_pos[i] = map_pos[i - 1] + Integer.parseInt(map[i - 1].getProperties().get("width").toString()) * 32;
             }
         }
+        System.out.println("randomised");
         for (int i = 0; i < len; i++) {
             System.out.print(tile_map_indexes[i] - 4 + " ");
         }
@@ -100,15 +106,17 @@ public class front_map_generator {
         output_map.writeString(header_of_map, false);
         ArrayList<ArrayList<String>> maps_data = new ArrayList<>();
         for (int i = 0; i < map.length; i++) {
-            FileReader map_file_reader = new FileReader(list_of_maps[tile_map_indexes[i]].file());
-            Scanner map_scanner = new Scanner(map_file_reader);
-            ArrayList<String> map_data = new ArrayList<>();
-            while (map_scanner.hasNext()) {
-                map_data.add(map_scanner.nextLine());
+            FileHandle map_file_reader = Gdx.files.internal(list_of_maps[tile_map_indexes[i]].file().getPath());
+//            Scanner map_scanner = new Scanner(map_file_reader);
+//            System.out.println(map_file_reader.readString());
+            String[] data = map_file_reader.readString().toString().split("\n");
+            for (int j = 0; j < data.length; j++) {
+//                System.out.println(data[j]);
             }
+            ArrayList<String> map_data = new ArrayList<>(Arrays.asList(data));
             maps_data.add(map_data);
-            map_file_reader.close();
-            map_scanner.close();
+//            map_file_reader.close();
+//            map_scanner.close();
         }
         end_index_map_data = height + start_index_map_data - 1;
         for (int i = start_index_map_data; i < end_index_map_data; i++) {
@@ -156,7 +164,7 @@ public class front_map_generator {
                 "</map>\n", true);
 //        output_map.close();
         System.out.println("bbb");
-        big_map = new TmxMapLoader().load("assets/automatic_generated_map.tmx");
+        big_map = new TmxMapLoader().load("automatic_generated_map.tmx");
         System.out.println("map has been generated sucessfully");
         bg_unite();
     }
@@ -177,18 +185,14 @@ public class front_map_generator {
                 " <tileset firstgid=\"1\" source=\"../dark city tileset 1.tsx\"/>\n <tileset firstgid=\"1001\" source=\"../inside_tileset1.tsx\"/>\n" +
                 " <layer id=\"1\" name=\"Tiles_lay_1\" width=\"" + width + "\" height=\"" + height + "\">\n" +
                 "  <data encoding=\"csv\">\n";
-        output_map.writeString(header_of_map, true);
+        output_map.writeString(header_of_map, false);
         ArrayList<ArrayList<String>> maps_data = new ArrayList<>();
         for (int i = 0; i < map.length; i++) {
-            FileReader map_file_reader = new FileReader(list_of_maps[bg_tile_map_indexes[i]].file());
-            Scanner map_scanner = new Scanner(map_file_reader);
-            ArrayList<String> map_data = new ArrayList<>();
-            while (map_scanner.hasNext()) {
-                map_data.add(map_scanner.nextLine());
-            }
+            FileHandle map_file_reader = Gdx.files.internal(list_of_maps[tile_map_indexes[i]].file().getPath());
+
+            String[] data = map_file_reader.readString().toString().split("\n");
+            ArrayList<String> map_data = new ArrayList<>(Arrays.asList(data));
             maps_data.add(map_data);
-            map_file_reader.close();
-            map_scanner.close();
         }
         bg_end_index_map_data = height + bg_start_index_map_data - 1;
         for (int i = bg_start_index_map_data; i < bg_end_index_map_data; i++) {
@@ -206,7 +210,7 @@ public class front_map_generator {
         output_map.writeString(tiles512, true);
         int border_x = width * 32, border_y = height * 32;
 //      start of borders and objects
-        bg_start_index_map_data = bg_end_index_map_data + 4;
+        bg_start_index_map_data = bg_end_index_map_data + 3;
         output_map.writeString("</data>\n" +
                 " </layer>\n" +
                 " <objectgroup id=\"2\" name=\"Objects\">\n", true);
@@ -221,6 +225,7 @@ public class front_map_generator {
             for (int j = bg_start_index_map_data; j < bg_end_index_map_data; j += 3) {
                 String input_line_1 = maps_data.get(i).get(j), input_line_2 = maps_data.get(i).get(j + 1), input_line_3 = maps_data.get(i).get(j + 2);
                 String[] line_1 = input_line_1.split("\"");
+                System.out.println(input_line_1);
 //                for (int k = 0; k < line_1.length; k++) {
 //                    System.out.println(k + " " + line_1[k]);
 //                }
@@ -236,7 +241,7 @@ public class front_map_generator {
                 "</map>\n", true);
 //        output_map.close();
         System.out.println("bbb");
-        big_map = new TmxMapLoader().load("assets/bg_automatic_generated_map.tmx");
+        big_map = new TmxMapLoader().load("bg_automatic_generated_map.tmx");
         System.out.println("background map has been generated sucessfully");
         doors_position_setter();
     }

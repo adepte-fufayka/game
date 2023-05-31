@@ -11,13 +11,15 @@ import java.io.IOException;
 public class MainActivity extends Game {
     @Override
     public void create() {
+        System.out.println("create");
         try {
-            map_generator = new front_map_generator(0, 50);
+            map_generator = new front_map_generator(0, 5);
         } catch (IOException e) {
+            System.out.println("exception");
             throw new RuntimeException(e);
         }
         System.out.println(2.25f % 2.20f);
-        Texture enemy_texture = new Texture("assets/hero.png");
+//        Texture enemy_texture = new Texture("assets/hero.png");
         Gdx.graphics.setForegroundFPS(120);
         enemy[] enemies = new enemy[map_generator.getEnemies_positions().length];
         for (int i = 0; i < enemies.length; i++) {
